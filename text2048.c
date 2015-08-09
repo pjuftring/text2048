@@ -6,7 +6,8 @@
 
 #include <curses.h>
 
-#define GAME_COLS	4
+#include "text2048.h"
+#include "map_ops.h"
 
 void swap_int(int *const a, int *const b){
 	if(a != b){
@@ -17,8 +18,6 @@ void swap_int(int *const a, int *const b){
 }
 
 unsigned int map[GAME_COLS][GAME_COLS] = {0}; 
-
-#include "map_ops.c"
 
 int pow2(int exp)
 {

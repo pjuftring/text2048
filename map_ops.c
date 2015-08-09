@@ -1,4 +1,6 @@
 
+#include "text2048.h"
+
 /*
 void extract_map(unsigned int array[GAME_COLS][GAME_COLS]){
 	int i;
