@@ -59,6 +59,10 @@ void draw(void)
 		}
 	}
 
+	color_set(10, 0);
+	mvaddstr(LINES-3,2,"Use arrow keys to play");
+	mvaddstr(LINES-2,2,"Press Q to exit");
+
 	refresh();
 }
 
