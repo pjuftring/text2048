@@ -23,6 +23,28 @@ void compress_map(const unsigned int array[GAME_COLS][GAME_COLS]){
 }
 */
 
+int map_check_move_possible(void)
+{
+	int x,y;
+	for(y = 0; y < GAME_COLS; y++){
+		for(x = 0; x < GAME_COLS-1; x++){
+			if(map[x][y] == map[x+1][y] || map[x][y] == 0)
+				return 1;
+		}
+		if(map[GAME_COLS-1][y] == 0)
+			return 1;
+	}
+	for(x = 0; x < GAME_COLS; x++){
+		for(y = 0; y < GAME_COLS-1; y++){
+			if(map[x][y] == map[x][y+1] || map[x][y] == 0)
+				return 1;
+		}
+		if(map[x][GAME_COLS-1] == 0)
+			return 1;
+	}
+	return 0;
+}
+
 int toleft(int line){
 	int i = 0, j = 0, actions = 0;
 	for(i = 0; i < GAME_COLS; i++){

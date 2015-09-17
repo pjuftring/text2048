@@ -28,7 +28,7 @@ int pow2(int exp)
 	return x;
 }
 
-void draw(void)
+void drawmap(void)
 {
 	int x,y;
 	char str[50];
@@ -58,12 +58,6 @@ void draw(void)
 			}
 		}
 	}
-
-	color_set(10, 0);
-	mvaddstr(LINES-3,2,"Use arrow keys to play");
-	mvaddstr(LINES-2,2,"Press Q to exit");
-
-	refresh();
 }
 
 void shuffle(int vec[], const int len)
@@ -76,6 +70,27 @@ void shuffle(int vec[], const int len)
 		swap_int(&vec[pos1], &vec[pos2]);
 	}
 
+}
+
+void gameover(void)
+{
+	drawmap();
+
+	color_set(9, 0);
+	mvaddstr(LINES-4,2,"GAME OVER");
+	mvaddstr(LINES-3,2,"Press Q to exit");
+	mvaddstr(LINES-2,2,"Press any other key to play again");
+
+	refresh();
+	
+	int c;
+	do{
+		c = getch();
+	}while(c == KEY_LEFT || c == KEY_RIGHT || c == KEY_UP || c == KEY_DOWN);
+	/* will prevent accidental new game */
+	
+	if(c == 'q' || c == 'Q')
+		exit(0);
 }
 
 int spawn_number(void)
@@ -101,12 +116,27 @@ int spawn_number(void)
 					map[x][y] = 2;
 				else
 					map[x][y] = 1;
+
+				if(!map_check_move_possible()){
+					gameover();
+					return 0;
+				}
+				
 				return 1;
 			}
 		}
 	}
 
 	return 0;
+}
+
+void resetmap(void)
+{
+	int x,y;
+	for(y = 0; y < GAME_COLS; y++)
+		for(x = 0; x < GAME_COLS; x++)
+			map[x][y] = 0;
+	spawn_number();
 }
 
 int main(int argc, char **argv)
@@ -129,11 +159,17 @@ int main(int argc, char **argv)
 	cbreak();
 	keypad(stdscr, TRUE);
 
-	spawn_number();
+	resetmap();
 
 	int key;
 	for(;;){
-		draw();
+		drawmap();
+
+		color_set(10, 0);
+		mvaddstr(LINES-3,2,"Use arrow keys to play");
+		mvaddstr(LINES-2,2,"Press Q to exit");
+
+		refresh();
 
 		key = getch();
 		if(tolower(key) == 'q') break;
@@ -141,20 +177,20 @@ int main(int argc, char **argv)
 
 		switch(key){
 		case KEY_LEFT:
-			if(map_leftop())
-				spawn_number();
+			if(map_leftop() && !spawn_number())
+				resetmap();
 			break;
 		case KEY_RIGHT:
-			if(map_rightop())
-				spawn_number();
+			if(map_rightop() && !spawn_number())
+				resetmap();
 			break;
 		case KEY_UP:
-			if(map_upop())
-				spawn_number();
+			if(map_upop() && !spawn_number())
+				resetmap();
 			break;
 		case KEY_DOWN:
-			if(map_downop())
-				spawn_number();
+			if(map_downop() && !spawn_number())
+				resetmap();
 			break;
 		}
 	}
