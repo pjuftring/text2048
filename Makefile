@@ -10,7 +10,7 @@ MAIN = text2048
 all:    $(MAIN)
 
 $(MAIN): $(OBJS) 
-	$(CC) $(LIBS) $(CFLAGS) -o $(MAIN) $(OBJS)
+	$(CC) -o $(MAIN) $(OBJS) $(LIBS) $(CFLAGS)
 
 .c.o:
 	$(CC) $(CFLAGS) -c $<  -o $@
